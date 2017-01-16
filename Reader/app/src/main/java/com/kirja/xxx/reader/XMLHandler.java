@@ -18,7 +18,9 @@ public class XMLHandler {
     public String xml;
     public XmlPullParser xpp;
 
-    public XMLHandler() {}
+    public XMLHandler() {
+
+    }
 
     public void setResult(String result) {
         Log.i("result2", result);
@@ -28,7 +30,7 @@ public class XMLHandler {
             records = json.getJSONArray("records");
             xml = records.getJSONObject(0).getString("fullRecord");
 
-            Log.i("results", results);
+            Log.i("viesti", this.getAuthor());
 
         } catch (Exception e) {
             Log.e("XML error", e.toString());
@@ -114,12 +116,22 @@ public class XMLHandler {
                 //+ getDatafield("245", "b");
     }
 
-    //also 700, a & 245, c:
+    //TODO: author name may be also in datafields 700, a & 245, c:
     public String getAuthor () {
         return getDatafield("100", "a");
+    }
+
+    public String getSeriesName () {
+        String name = getDatafield("490", "a");
+        if (name != null) return name;
+        name = getDatafield("651", "a");
+        if (name != null) return name;
+        name = getDatafield("830", "a");
+        return name;
     }
 
     public String getResults() {
         return results;
     }
+
 }

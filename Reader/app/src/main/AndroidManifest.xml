@@ -33,6 +33,12 @@
             <meta-data android:name="android.nfc.action.TECH_DISCOVERED"
                 android:resource="@xml/nfc_tech_filter" />
         </activity>
+        <activity android:name=".ViewItem"
+            android:screenOrientation="sensorPortrait">
+        </activity>
+        <activity android:name=".HTMLActivity"
+            android:screenOrientation="sensorPortrait">
+        </activity>
     </application>
 
 </manifest>

@@ -16,45 +16,9 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class APICall {
+public class APICall extends AsyncTask<String, Void, String> {
+    public TaskDelegate delegate = null;
 
-    Context context;
-    XMLHandler xmlh;
-
-    public void getData(Context c, XMLHandler x, String isbn) {
-        String url = "https://api.finna.fi/v1/search?lookfor="+ isbn +"&field[]=fullRecord";
-        xmlh = x;
-        context = c;
-
-        if (!isConnected())
-            Toast.makeText(context,
-                    "Verkkoyhteys ei toimi!", Toast.LENGTH_LONG).show();
-        else
-            new HttpAsyncTask().execute(url);
-    }
-
-    public void getSeries(Context c, String name) {
-
-        String url = "https://api.finna.fi/v1/search?lookfor=series:" + name + "&type=Series&field[]=cleanIsbn&field[]=title";
-        context = c;
-
-        if (!isConnected())
-            Toast.makeText(context,
-                    "Verkkoyhteys ei toimi!", Toast.LENGTH_LONG).show();
-        else
-            new HttpAsyncTask().execute(url);
-    }
-
-    public boolean isConnected() {
-        ConnectivityManager connMgr = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-        if (networkInfo != null && networkInfo.isConnected())
-            return true;
-        else
-            return false;
-    }
-
-    private class HttpAsyncTask extends AsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(String... urls) {
             String result = "";
@@ -84,8 +48,6 @@ public class APICall {
         // onPostExecute displays the results of the AsyncTask.
         @Override
         protected void onPostExecute(String result) {
-            Log.i("result1", result);
-            xmlh.setResult(result);
+            delegate.TaskCompleted(result);
         }
-    }
 }
