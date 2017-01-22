@@ -12,7 +12,7 @@ public class HTMLActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_webview);
-        String author = getIntent().getStringExtra("Author");
+        String author = getIntent().getStringExtra("Keyword");
         webview = (WebView) findViewById(R.id.webview);
         webview.getSettings().setJavaScriptEnabled(true);
         webview.getSettings().setSupportZoom(true);

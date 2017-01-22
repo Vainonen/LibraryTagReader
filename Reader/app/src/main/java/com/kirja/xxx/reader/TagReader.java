@@ -28,13 +28,7 @@ public class TagReader extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_reading);
-        //textViewInfo = (TextView) findViewById(R.id.info);
-        //textViewTagInfo = (TextView) findViewById(R.id.info);
-        //linearLayout = (LinearLayout) findViewById(R.id.data);
-        //linearLayout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
-        //      LinearLayout.LayoutParams.MATCH_PARENT));
-        //linearLayout.setOrientation(LinearLayout.VERTICAL);
+        setContentView(R.layout.activity_reading);
 
         nfcAdapter = NfcAdapter.getDefaultAdapter(this);
         if (nfcAdapter == null) {
@@ -138,21 +132,11 @@ public class TagReader extends AppCompatActivity {
                 number[5] = data[37];
 
                 String isbn = new BigInteger(number).toString();
-            Log.i("viesti1", isbn);
             if (!isbn.equals("0")) {
                 Intent intent = new Intent(this, ViewItem.class);
                 intent.putExtra("ISBN", isbn);
                 startActivity(intent);
             }
-
-
-
-                Log.i("viesti", "luettu");
-                //if (xmlh.getResults() == null) Log.i("title", "null");
-
-                //tv.setText(title);
-                //HashMap<String, String> fields = xmlh.getEntry();
-                //if(fields.containsKey("series")) ac.getSeries(this.getApplicationContext(), fields.get("series"));
             }
 
             }catch(IOException e){

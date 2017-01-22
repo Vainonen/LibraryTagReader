@@ -9,6 +9,7 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,15 +29,15 @@ public class ViewItem extends Activity implements TaskDelegate, View.OnClickList
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_reading);
-        textViewInfo = (TextView) findViewById(R.id.info);
-        textViewTagInfo = (TextView) findViewById(R.id.info);
+        setContentView(R.layout.activity_viewitem);
+        //textViewInfo = (TextView) findViewById(R.id.info);
+        //textViewTagInfo = (TextView) findViewById(R.id.info);
         linearLayout = (LinearLayout) findViewById(R.id.data);
-
+        author = (TextView) findViewById(R.id.author);
+        series = (TextView) findViewById(R.id.series);
+        isbntext = (TextView) findViewById(R.id.isbn);
         isbn = getIntent().getStringExtra("ISBN");
-        isbntext = new TextView(this);
         isbntext.setText("ISBN: " + isbn);
-        linearLayout.addView(isbntext);
 
         xmlh = new XMLHandler();
 
@@ -46,21 +47,6 @@ public class ViewItem extends Activity implements TaskDelegate, View.OnClickList
 
     private void getData(String isbn) {
         String url = "https://api.finna.fi/v1/search?lookfor="+ isbn +"&field[]=fullRecord";
-        ac.delegate = this;
-
-        if (!isConnected())
-            Toast.makeText(this.getApplicationContext(),
-                    "Verkkoyhteys ei toimi!", Toast.LENGTH_LONG).show();
-        else try {
-            ac.execute(url);
-        }
-        catch (Exception e) {
-            Log.e("error", "not result");
-        }
-    }
-
-    public void getSeries(String name) {
-        String url = "https://api.finna.fi/v1/search?lookfor=series:" + name + "&type=Series&field[]=cleanIsbn&field[]=title";
         ac.delegate = this;
 
         if (!isConnected())
@@ -86,14 +72,10 @@ public class ViewItem extends Activity implements TaskDelegate, View.OnClickList
     @Override
     public void TaskCompleted(String result) {
         xmlh.setResult(result);
-        Log.i("viesti", "tehty");
         String authorname = xmlh.getAuthor();
         if (authorname != null) {
-            author = new TextView(this);
             author.setText("Tekijä: " + authorname);
             author.setOnClickListener(this);
-            author.setId(0);
-            linearLayout.addView(author);
         }
         String booktitle = xmlh.getTitle();
         if (authorname != null) {
@@ -103,19 +85,25 @@ public class ViewItem extends Activity implements TaskDelegate, View.OnClickList
         }
         String seriesname = xmlh.getSeriesName();
         if (seriesname != null) {
-            series = new TextView(this);
             series.setText("Kuuluu sarjaan: " + seriesname);
-            linearLayout.addView(series);
+            series.setOnClickListener(this);
         }
     }
 
     @Override
     public void onClick(View v) {
-        int id = v.getId();
-        if (id == 0) {
-            Intent intent = new Intent(getBaseContext(), HTMLActivity.class);
-            intent.putExtra("Author", xmlh.getAuthor());
-            startActivity(intent);
+        switch (v.getId()) {
+            case R.id.author: {
+                Intent intent = new Intent(getBaseContext(), HTMLActivity.class);
+                intent.putExtra("Keyword", xmlh.getAuthor());
+                startActivity(intent);
+            }
+            case R.id.series: {
+                Intent intent = new Intent(getBaseContext(), ViewSeries.class);
+                intent.putExtra("Series", xmlh.getSeriesName());
+                startActivity(intent);
+            }
         }
+
     }
 }

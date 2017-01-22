@@ -17,6 +17,8 @@ import org.xmlpull.v1.XmlPullParserFactory;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
 
@@ -28,28 +30,71 @@ import javax.xml.xpath.XPathFactory;
 
 public class JSONHandler {
 
-    public static JSONObject json;
-    public static JSONArray records;
-    public static String results;
-    public static String xml;
+    JSONObject json;
+    JSONArray records;
+    String results;
+    String xml;
 
-    public JSONHandler(String result) {
+    public JSONHandler() {
+
+    }
+
+    public void setResult(String result) {
         Log.i("result", result);
         try {
             json = new JSONObject(result);
             results = json.getString("resultCount");
             records = json.getJSONArray("records");
             xml = records.getJSONObject(0).getString("fullRecord");
-            Log.i("xml", xml);
-            int number = readXML();
-            Log.i("sivumäärä", Integer.toString(number));
         } catch (Exception e) {
             Log.e("JSON error", e.toString());
         }
     }
 
+    public ArrayList getSeries() {
+
+        ArrayList series = new ArrayList();
+
+        for (int i = 0; i < records.length(); i++) {
+
+            String data[] = new String[4];
+
+            try {
+                JSONArray seriesarray = records.getJSONObject(i).getJSONArray("series");
+                data[0] = seriesarray.getJSONObject(0).getString("number");
+            } catch (Exception e) {
+                Log.e("JSON error", e.toString());
+            }
+            try {
+                data[1] = records.getJSONObject(i).getString("title");
+            } catch (Exception e) {
+                Log.e("JSON error", e.toString());
+            }
+            try {
+                data[2] = records.getJSONObject(i).getString("year");
+            } catch (Exception e) {
+                Log.e("JSON error", e.toString());
+            }
+            try {
+                data[3] = records.getJSONObject(i).getString("cleanIsbn");
+                Log.i("viestiisbn", data[3]);
+            } catch (Exception e) {
+                Log.e("JSON error", e.toString());
+            }
+            series.add(data);
+        }
+        /*
+        Collections.sort(series, new Comparator<String[]>() {
+            public int compare(String[] strings, String[] otherStrings) {
+                return strings[0].compareTo(otherStrings[0]);
+            }
+        });
+        */
+        return series;
+    }
+
     //TODO: returns just the first author name in case of more authors in one title
-    public static String getAuthor() {
+    public String getAuthor() {
         try {
             JSONArray authors = records.getJSONObject(0).getJSONArray("nonPresenterAuthors");
             return authors.getJSONObject(0).getString("name");
@@ -59,7 +104,7 @@ public class JSONHandler {
         return ""; //returns empty String for Speech class
     }
 
-    public static String getTitle() {
+    public String getTitle() {
         try {
             return records.getJSONObject(0).getString("title");
         } catch (Exception e) {
@@ -73,7 +118,7 @@ public class JSONHandler {
         return null;
     }
 
-    public static String getLanguage() {
+    public String getLanguage() {
         try {
             JSONArray languages = records.getJSONObject(0).getJSONArray("languages");
             return languages.getString(0);
@@ -83,60 +128,7 @@ public class JSONHandler {
         return ""; //returns empty String for Speech class
     }
 
-    public static String getResults() {
+    public String getResults() {
         return results;
     }
-
-    private int readXML() {
-        int pages = 0;
-        try {
-            XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
-
-            factory.setNamespaceAware(true);
-            XmlPullParser xpp = factory.newPullParser();
-            xpp.setInput(new StringReader(xml));
-            int eventType = xpp.getEventType();
-
-            while (eventType != XmlPullParser.END_DOCUMENT) {
-                if (eventType == XmlPullParser.START_TAG) {
-                    try {
-                        String name = xpp.getName();
-                        String value = xpp.getAttributeValue(0);
-                        if (name.equals("datafield") && value.equals("300")) {
-                            Log.i("xml täällä", "täällä");
-                            while (eventType != XmlPullParser.END_TAG) {
-                                eventType = xpp.next();
-                                if (eventType == XmlPullParser.START_TAG) {
-                                    name = xpp.getName();
-                                    value = xpp.getAttributeValue(0);
-                                    if (name.equals("subfield") && value.equals("a")) {
-                                        eventType = xpp.next();
-                                        if (eventType == XmlPullParser.TEXT) {
-                                            String marcpages = xpp.getText();
-                                            Scanner sc = new Scanner(marcpages);
-                                            try {
-                                                pages = sc.nextInt();
-                                            } catch (Exception e) {
-                                                Log.e("error", "number not in correct format");
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    } catch (Exception e) {
-                        Log.e("xml error", "attribute not found");
-                    }
-                    eventType = xpp.next();
-                }
-            }
-        }
-        catch (Exception e) {
-            Log.e("readerror", e.toString());
-        }
-        return pages;
-}
-
-
-
 }
