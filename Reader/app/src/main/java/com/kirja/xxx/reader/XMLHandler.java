@@ -37,18 +37,6 @@ public class XMLHandler {
         }
     }
 
-/*
-    public static String getLanguage() {
-        try {
-            JSONArray languages = records.getJSONObject(0).getJSONArray("languages");
-            return languages.getString(0);
-        } catch (Exception e) {
-            Log.e("JSON error", e.toString());
-        }
-        return ""; //returns empty String for Speech class
-    }
-*/
-
     //TODO: infinite loop if xml is malformed?
     private String getDatafield(String number, String value) {
 
@@ -112,13 +100,15 @@ public class XMLHandler {
     }
 
     public String getTitle () {
-        return getDatafield("245", "a");
-                //+ getDatafield("245", "b");
+        String title = "";
+        if (getDatafield("245", "a") != null) title += getDatafield("245", "a");
+        if (getDatafield("245", "b") != null) title += getDatafield("245", "b");
+        return title.replaceAll("\\s*\\p{Punct}+\\s*$", "");
     }
 
     //TODO: author name may be also in datafields 700, a & 245, c:
     public String getAuthor () {
-        return getDatafield("100", "a");
+        return getDatafield("100", "a").replaceAll("\\s*\\p{Punct}+\\s*$", "");
     }
 
     public String getSeriesName () {
@@ -127,7 +117,7 @@ public class XMLHandler {
         name = getDatafield("651", "a");
         if (name != null) return name;
         name = getDatafield("830", "a");
-        return name;
+        return name.replaceAll("\\s*\\p{Punct}+\\s*$", "");
     }
 
     public String getResults() {

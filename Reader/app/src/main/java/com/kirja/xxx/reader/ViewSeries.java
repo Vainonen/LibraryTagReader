@@ -11,6 +11,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,7 +20,7 @@ import java.util.ArrayList;
 
 public class ViewSeries extends Activity implements TaskDelegate, View.OnClickListener {
 
-    LinearLayout linearLayout;
+    TableLayout tableLayout;
     JSONHandler jsonh;
     String series;
     ArrayList<String []> al;
@@ -28,7 +30,7 @@ public class ViewSeries extends Activity implements TaskDelegate, View.OnClickLi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_viewseries);
-        linearLayout = (LinearLayout) findViewById(R.id.data);
+        tableLayout = (TableLayout) findViewById(R.id.data);
         series = getIntent().getStringExtra("Series");
         jsonh = new JSONHandler();
         Log.i("sarja", series);
@@ -65,25 +67,29 @@ public class ViewSeries extends Activity implements TaskDelegate, View.OnClickLi
     public void TaskCompleted(String result) {
         jsonh.setResult(result);
         al = jsonh.getSeries();
+        TableRow.LayoutParams trlp =
+                new TableRow.LayoutParams
+                        (TableRow.LayoutParams.FILL_PARENT,TableLayout.LayoutParams.WRAP_CONTENT);
         TextView [] link = new TextView[al.size()];
-        Log.i("viestikoko", Integer.toString(link.length));
-        Log.i("viestikoko", Integer.toString(al.size()));
+        TableRow [] tr = new TableRow[al.size()];
 
         for (int i = 0; i < al.size(); i++) {
             String [] seriesdata = al.get(i);
             String text = "";
-            Log.i("viesti", seriesdata[1]);
-            Log.i("viesti", seriesdata[2]);
             if (seriesdata[0] != null) text += seriesdata[0]+" ";
             if (seriesdata[1] != null) text += seriesdata[1]+" ";
             if (seriesdata[2] != null) text += seriesdata[2]+" ";
-            Log.i("viestiteksti", text);
             link[i] = new TextView(this);
+            tr[i] = new TableRow(this);
             link[i].setText(text);
             if (seriesdata[3] != null) link[i].setOnClickListener(this);
             else link[i].setTextColor(Color.RED);
             link[i].setId(i);
-            linearLayout.addView(link[i]);
+            link[i].setLayoutParams(trlp);
+            trlp.setMargins(20, 20, 20, 20);
+            tr[i].setBackgroundResource(R.drawable.row_border);
+            tr[i].addView(link[i]);
+            tableLayout.addView(tr[i]);
         }
     }
 
@@ -98,7 +104,6 @@ public class ViewSeries extends Activity implements TaskDelegate, View.OnClickLi
         catch (Exception e) {
             Log.e("Series error", "no ISBN");
         }
-        Log.i("klikki", isbn);
         Intent intent = new Intent(getBaseContext(), HTMLActivity.class);
         intent.putExtra("Keyword", isbn);
         startActivity(intent);

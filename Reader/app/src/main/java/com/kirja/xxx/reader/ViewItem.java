@@ -7,16 +7,16 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.style.UnderlineSpan;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 public class ViewItem extends Activity implements TaskDelegate, View.OnClickListener {
 
-    TextView textViewInfo, textViewTagInfo;
     LinearLayout linearLayout;
     XMLHandler xmlh;
     TextView isbntext;
@@ -30,10 +30,9 @@ public class ViewItem extends Activity implements TaskDelegate, View.OnClickList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_viewitem);
-        //textViewInfo = (TextView) findViewById(R.id.info);
-        //textViewTagInfo = (TextView) findViewById(R.id.info);
         linearLayout = (LinearLayout) findViewById(R.id.data);
         author = (TextView) findViewById(R.id.author);
+        title = (TextView) findViewById(R.id.title);
         series = (TextView) findViewById(R.id.series);
         isbntext = (TextView) findViewById(R.id.isbn);
         isbn = getIntent().getStringExtra("ISBN");
@@ -72,20 +71,22 @@ public class ViewItem extends Activity implements TaskDelegate, View.OnClickList
     @Override
     public void TaskCompleted(String result) {
         xmlh.setResult(result);
-        String authorname = xmlh.getAuthor();
+        String authorname = "Tekijä: " + xmlh.getAuthor();
         if (authorname != null) {
-            author.setText("Tekijä: " + authorname);
+            SpannableString content = new SpannableString(authorname);
+            content.setSpan(new UnderlineSpan(), 8, authorname.length(), 0);//where first 0 shows the starting and udata.length() shows the ending span.if you want to span only part of it than you can change these values like 5,8 then it will underline part of it.
+            author.setText(content);
             author.setOnClickListener(this);
         }
         String booktitle = xmlh.getTitle();
         if (authorname != null) {
-            title = new TextView(this);
             title.setText("Teos: " + booktitle);
-            linearLayout.addView(title);
         }
-        String seriesname = xmlh.getSeriesName();
+        String seriesname = "Kuuluu sarjaan: " + xmlh.getSeriesName();
         if (seriesname != null) {
-            series.setText("Kuuluu sarjaan: " + seriesname);
+            SpannableString content = new SpannableString(seriesname);
+            content.setSpan(new UnderlineSpan(), 16, seriesname.length(), 0);//where first 0 shows the starting and udata.length() shows the ending span.if you want to span only part of it than you can change these values like 5,8 then it will underline part of it.
+            series.setText(content);
             series.setOnClickListener(this);
         }
     }
