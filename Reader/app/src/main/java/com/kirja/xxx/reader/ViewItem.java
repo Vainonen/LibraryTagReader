@@ -4,10 +4,12 @@ package com.kirja.xxx.reader;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.text.style.UnderlineSpan;
 import android.util.Log;
 import android.view.View;
@@ -71,21 +73,27 @@ public class ViewItem extends Activity implements TaskDelegate, View.OnClickList
     @Override
     public void TaskCompleted(String result) {
         xmlh.setResult(result);
-        String authorname = "Tekijä: " + xmlh.getAuthor();
-        if (authorname != null) {
+        if (xmlh.getAuthor() != null) {
+            String authorname = "Tekijä: " + xmlh.getAuthor();
             SpannableString content = new SpannableString(authorname);
-            content.setSpan(new UnderlineSpan(), 8, authorname.length(), 0);//where first 0 shows the starting and udata.length() shows the ending span.if you want to span only part of it than you can change these values like 5,8 then it will underline part of it.
+            content.setSpan(new UnderlineSpan(), 8, authorname.length(), 0);
+            content.setSpan(new ForegroundColorSpan(Color.BLUE), 8, authorname.length(), 0);
             author.setText(content);
             author.setOnClickListener(this);
         }
-        String booktitle = xmlh.getTitle();
-        if (authorname != null) {
-            title.setText("Teos: " + booktitle);
+        if (xmlh.getTitle() != null) {
+            String booktitle = "Teos: " + xmlh.getTitle();
+            SpannableString content = new SpannableString(booktitle);
+            content.setSpan(new UnderlineSpan(), 6, booktitle.length(), 0);
+            content.setSpan(new ForegroundColorSpan(Color.BLUE), 6, booktitle.length(), 0);
+            title.setText(content);
+            title.setOnClickListener(this);
         }
-        String seriesname = "Kuuluu sarjaan: " + xmlh.getSeriesName();
-        if (seriesname != null) {
+        if (xmlh.getSeriesName() != null) {
+            String seriesname = "Kuuluu sarjaan: " + xmlh.getSeriesName();
             SpannableString content = new SpannableString(seriesname);
-            content.setSpan(new UnderlineSpan(), 16, seriesname.length(), 0);//where first 0 shows the starting and udata.length() shows the ending span.if you want to span only part of it than you can change these values like 5,8 then it will underline part of it.
+            content.setSpan(new UnderlineSpan(), 16, seriesname.length(), 0);
+            content.setSpan(new ForegroundColorSpan(Color.BLUE), 16, seriesname.length(), 0);
             series.setText(content);
             series.setOnClickListener(this);
         }
@@ -98,11 +106,19 @@ public class ViewItem extends Activity implements TaskDelegate, View.OnClickList
                 Intent intent = new Intent(getBaseContext(), HTMLActivity.class);
                 intent.putExtra("Keyword", xmlh.getAuthor());
                 startActivity(intent);
+                break;
+            }
+            case R.id.title: {
+                Intent intent = new Intent(getBaseContext(), HTMLActivity.class);
+                intent.putExtra("Keyword", xmlh.getTitle());
+                startActivity(intent);
+                break;
             }
             case R.id.series: {
                 Intent intent = new Intent(getBaseContext(), ViewSeries.class);
                 intent.putExtra("Series", xmlh.getSeriesName());
                 startActivity(intent);
+                break;
             }
         }
 

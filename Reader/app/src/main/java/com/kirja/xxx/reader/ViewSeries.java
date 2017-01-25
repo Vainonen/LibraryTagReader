@@ -39,7 +39,9 @@ public class ViewSeries extends Activity implements TaskDelegate, View.OnClickLi
     }
 
     private void getData(String series) {
-        String url = "https://api.finna.fi/v1/search?lookfor=series:" + series + "&language=fi&field[]=title&field[]=cleanIsbn&field[]=year&field[]=series";
+        String url = "https://api.finna.fi/v1/search?lookfor=series:" + series + "&filter[]=language:fin" +
+                "&field[]=title&field[]=cleanIsbn&field[]=isbns" +
+                "&field[]=year&field[]=series&field[]=format:\"0/Book";
         Log.i("sarja", url);
         ac.delegate = this;
 
@@ -78,11 +80,12 @@ public class ViewSeries extends Activity implements TaskDelegate, View.OnClickLi
             String text = "";
             if (seriesdata[0] != null) text += seriesdata[0]+" ";
             if (seriesdata[1] != null) text += seriesdata[1]+" ";
-            if (seriesdata[2] != null) text += seriesdata[2]+" ";
+            if (seriesdata[2] != null) text += "("+seriesdata[2]+") ";
+            if (seriesdata[4] != null) text += seriesdata[4]+" ";
             link[i] = new TextView(this);
             tr[i] = new TableRow(this);
             link[i].setText(text);
-            if (seriesdata[3] != null) link[i].setOnClickListener(this);
+            if (seriesdata[3] != null) tr[i].setOnClickListener(this);
             else link[i].setTextColor(Color.RED);
             link[i].setId(i);
             link[i].setLayoutParams(trlp);

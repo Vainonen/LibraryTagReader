@@ -17,6 +17,7 @@ import org.xmlpull.v1.XmlPullParserFactory;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -51,13 +52,14 @@ public class JSONHandler {
         }
     }
 
-    public ArrayList getSeries() {
+    public ArrayList<String []> getSeries() {
 
-        ArrayList series = new ArrayList();
+        ArrayList<String []> series = new ArrayList();
 
         for (int i = 0; i < records.length(); i++) {
 
-            String data[] = new String[4];
+            String data[] = new String[5];
+
 
             try {
                 JSONArray seriesarray = records.getJSONObject(i).getJSONArray("series");
@@ -77,19 +79,33 @@ public class JSONHandler {
             }
             try {
                 data[3] = records.getJSONObject(i).getString("cleanIsbn");
-                Log.i("viestiisbn", data[3]);
             } catch (Exception e) {
                 Log.e("JSON error", e.toString());
             }
+            try {
+                JSONArray seriesarray = records.getJSONObject(i).getJSONArray("isbns");
+                data[4] = "";
+                String format = seriesarray.getString(0);
+                if (format.contains("nid")) data[4] = "pokkari";
+                if (format.contains("sid")) data[4] = "kovakantinen";
+            } catch (Exception e) {
+                Log.e("JSON error", e.toString());
+            }
+            for (int j = 0; j < data.length; j++) {
+                if (data[j] == null) data[j] = "";
+            }
             series.add(data);
+
         }
-        /*
+
         Collections.sort(series, new Comparator<String[]>() {
-            public int compare(String[] strings, String[] otherStrings) {
-                return strings[0].compareTo(otherStrings[0]);
+            public int compare(String[] s1, String[] s2) {
+                if (s1[0].equals(s2[0])) return s1[2].compareTo(s2[2]);
+                if (s1[0].equals("") && s2[0].equals("")) return s1[2].compareTo(s2[2]);
+                return s1[0].compareTo(s2[0]);
             }
         });
-        */
+
         return series;
     }
 

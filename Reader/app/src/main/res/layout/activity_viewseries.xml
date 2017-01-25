@@ -1,14 +1,11 @@
-<TableLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:id="@+id/data">
-    <!--
-    <TableRow android:background="#FFFFFF"
+    android:layout_height="wrap_content">
+    <TableLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="1dp">
-        ...
-    </TableRow>
-    -->
-</TableLayout>
+        android:id="@+id/data">
+    </TableLayout>
+</ScrollView>

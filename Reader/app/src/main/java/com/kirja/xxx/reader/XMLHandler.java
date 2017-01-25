@@ -103,21 +103,27 @@ public class XMLHandler {
         String title = "";
         if (getDatafield("245", "a") != null) title += getDatafield("245", "a");
         if (getDatafield("245", "b") != null) title += getDatafield("245", "b");
-        return title.replaceAll("\\s*\\p{Punct}+\\s*$", "");
+        if (title != null) title = title.replaceAll("\\s*\\p{Punct}+\\s*$", "");
+        return title;
     }
 
     //TODO: author name may be also in datafields 700, a & 245, c:
     public String getAuthor () {
-        return getDatafield("100", "a").replaceAll("\\s*\\p{Punct}+\\s*$", "");
+        String author;
+        author = getDatafield("100", "a");
+        if (author != null) author = author.replaceAll("\\s*\\p{Punct}+\\s*$", "");
+        return author;
     }
 
     public String getSeriesName () {
-        String name = getDatafield("490", "a");
+        String name;
+        name = getDatafield("490", "a");
         if (name != null) return name;
         name = getDatafield("651", "a");
         if (name != null) return name;
         name = getDatafield("830", "a");
-        return name.replaceAll("\\s*\\p{Punct}+\\s*$", "");
+        if (name != null) name = name.replaceAll("\\s*\\p{Punct}+\\s*$", "");
+        return name;
     }
 
     public String getResults() {
