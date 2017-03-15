@@ -2,7 +2,7 @@
 <head>
 </head>
 
-<body>
+<body onload="init();">
 <div >
     Tekijä: <p id="author"></p>
     Teos: <p id="title"></p>
@@ -10,41 +10,7 @@
 
 </div>
 
-<script type="text/javascript">
-var myObj, i, x = "";
-myObj =
-{"resultCount":1,"records":[{"authors":{"main":{"Mankell, Henning":["-"]},"secondary":{"Kivel\u00e4, P\u00e4ivi":["-"]}},"title":"Rauhaton mies","series":[{"name":"Wallander"}]}],"status":"OK"}
-
-records = myObj.records;
-
-var authors;
-var author;
-  try {
-    authors = records[0].authors.main;
-    author = Object.keys(authors)[0];
-    }
-    catch(err) {
-    }
-
-document.getElementById("author").innerHTML = '<a href = "http://luettelo.helmet.fi/search*fin/X?SEARCH=a:('+author+')&searchscope=9&SORT=D">'+author+'</a>';
-
-var title;
-  try {
-    title = records[0].title;
-    }
-    catch(err) {
-    }
-
-document.getElementById("title").innerHTML = '<a href = "http://luettelo.helmet.fi/search*fin/X?SEARCH=t:('+title+')&searchscope=9&SORT=D">'+title+'</a>';
-
-var series;
-  try {
-    series = records[0].series[0].name;
-    }
-    catch(err) {
-    }
-   
-document.getElementById("series").innerHTML = '<a href = "series.html">'+series+'</a>';
+<script src="item.js">
 
 </script>
 </body>

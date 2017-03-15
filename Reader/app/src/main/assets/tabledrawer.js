@@ -2,7 +2,7 @@ function init() {
 
     var req = new XMLHttpRequest();
 
-    var series = "Wallander";
+    var series = Android.getSeries();
 
     var url = "https://api.finna.fi/v1/search?lookfor=series:" + series + "&filter[]=language:fin" +
                     "&field[]=title&field[]=cleanIsbn&field[]=isbns" +
