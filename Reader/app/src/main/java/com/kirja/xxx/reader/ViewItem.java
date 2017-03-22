@@ -86,5 +86,10 @@ public class ViewItem extends Activity {
         public void setSeries(String s) {
             series = s;
         }
+        @JavascriptInterface
+        public void showLog(String log) {
+            Log.i("JS-log", log);
+        }
+
     }
 }
