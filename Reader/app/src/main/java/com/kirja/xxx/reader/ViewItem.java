@@ -90,6 +90,9 @@ public class ViewItem extends Activity {
         public void showLog(String log) {
             Log.i("JS-log", log);
         }
-
+        @JavascriptInterface
+        public void showToast(String toast) {
+            Toast.makeText(mContext, toast, Toast.LENGTH_SHORT).show();
+        }
     }
 }
