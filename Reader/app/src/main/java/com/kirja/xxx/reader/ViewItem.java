@@ -91,6 +91,11 @@ public class ViewItem extends Activity {
             Log.i("JS-log", log);
         }
         @JavascriptInterface
+        public void returnToPreviousActivity() {
+            Toast.makeText(mContext, "Ei hakutuloksia tällä ISBN:llä", Toast.LENGTH_SHORT).show();
+            finish();
+        }
+        @JavascriptInterface
         public void showToast(String toast) {
             Toast.makeText(mContext, toast, Toast.LENGTH_SHORT).show();
         }

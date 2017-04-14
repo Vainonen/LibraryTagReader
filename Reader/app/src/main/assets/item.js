@@ -26,7 +26,7 @@ function init() {
 
     function handleResponse(jsondata) {
         var json = JSON.parse(jsondata);
-
+        if (json.resultCount == 0) Android.returnToPreviousActivity();
 /*
 var json =
 {"resultCount":1,"records":[{"authors":{"main":{"Mankell, Henning":["-"]},"secondary":{"Kivel\u00e4, P\u00e4ivi":["-"]}},"title":"Rauhaton mies","series":[{"name":"Wallander"}]}],"status":"OK"}

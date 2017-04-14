@@ -3,6 +3,18 @@
 </head>
 
 <body>
-<p>Laita RFID-tarra NFC-lukijan alle</p>
+    <p>Laita RFID-tarra NFC-lukijan alle</p>
+    <form>
+        tai kirjoita ISBN:<br>
+        <input type="number" name="isbn" id="isbn">
+        <button type="button" onclick='get();'>
+            Hae</button>
+    </form>
+    <script>
+        function get() {
+            var isbn = document.getElementById("isbn").value;
+            Android.getItem(isbn);
+        }
+    </script>
 </body>
 </html>
