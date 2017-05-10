@@ -35,23 +35,37 @@ var json =
 
         var authors;
         var author;
-              try {
-                authors = records[0].authors.main;
-                author = Object.keys(authors)[0];
-               }
-                catch(err) {
-               }
+        try {
+            authors = records[0].authors.primary;
+            author = Object.keys(authors)[0];
+        }
+        catch(err) {
+        }
 
-        document.getElementById("author").innerHTML = '<a href = "http://luettelo.helmet.fi/search*fin/X?SEARCH=a:('+author+')&searchscope=9&SORT=D">'+author+'</a>';
+        if (author !== undefined) {
+            Android.setAuthor(author);
+            document.getElementById("author").innerHTML = '<a href = "http://luettelo.helmet.fi/search*fin/X?SEARCH=a:('+author+')&searchscope=9&SORT=D">'+author+'</a>';
+            document.getElementById("newest").innerHTML = "Hae tekijän uusin teos";
+            document.getElementById("newest").addEventListener("click", function(eventInformation) {
+            var origin = eventInformation.target;
+            window.location.href = "newest.html";
+            eventInformation.preventDefault();
+            }, false);
+        }
+
+        var message = Android.getAuthor();
+        Android.showLog(message);
 
         var title;
-          try {
+        try {
             title = records[0].title;
-          }
-          catch(err) {
-          }
+        }
+        catch(err) {
+        }
 
-         document.getElementById("title").innerHTML = '<a href = "http://luettelo.helmet.fi/search*fin/X?SEARCH=t:('+title+')&searchscope=9&SORT=D">'+title+'</a>';
+        if (title !== undefined) {
+            document.getElementById("title").innerHTML = '<a href = "http://luettelo.helmet.fi/search*fin/X?SEARCH=t:('+title+')&searchscope=9&SORT=D">'+title+'</a>';
+        }
 
         var series;
             try {
@@ -66,5 +80,25 @@ var json =
             document.getElementById("series").innerHTML = '<a href = "series.html">'+series+'</a>';
         }
         else document.getElementById("series").innerHTML = '-';
+
+      var characterName;
+      var characterLink;
+
+      for (var i = 0; i < records[0].subjects.length; i++) {
+            try {
+                 var array = new Array();
+                 array = records[0].subjects[i];
+                if (array[1] === "fikt.") {
+                 characterName = array[0];
+                 characterLink = array[0] + " "+ array[1];
+                }
+            }
+            catch(err) {
+            }
+        }
+         if (character != null) {
+            document.getElementById("character").innerHTML = '<a href = "http://luettelo.helmet.fi/search*fin/X?SEARCH=d:('+characterLink+')&searchscope=9&SORT=D">'+characterName+'</a>';
+        }
+        else document.getElementById("character").innerHTML = '-';
     }
 }

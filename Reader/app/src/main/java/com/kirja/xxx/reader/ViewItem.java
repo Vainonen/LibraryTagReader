@@ -26,6 +26,7 @@ import android.widget.Toast;
 public class ViewItem extends Activity {
 
     String isbn = "";
+    String author = "";
     String series = "";
 
     @Override
@@ -75,6 +76,10 @@ public class ViewItem extends Activity {
             return isbn;
         }
         @JavascriptInterface
+        public String getAuthor() {
+            return author;
+        }
+        @JavascriptInterface
         public String getSeries() {
             return series;
         }
@@ -82,6 +87,8 @@ public class ViewItem extends Activity {
         public void setISBN(String s) {
             isbn = s;
         }
+        @JavascriptInterface
+        public void setAuthor(String s) { author = s; }
         @JavascriptInterface
         public void setSeries(String s) {
             series = s;
